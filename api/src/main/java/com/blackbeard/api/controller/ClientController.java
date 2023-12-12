@@ -1,5 +1,7 @@
 package com.blackbeard.api.controller;
 
+import com.blackbeard.api.exception.ApiException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +27,12 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<Client> createClient(@RequestBody ClientDTO clientDTO) {
+        if (clientDTO.getName() == null || clientDTO.getTel() == null) {
+            throw new ApiException(
+                    "Requisição inválida",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
         Client client = new Client();
         client.setName(clientDTO.getName());
         client.setTel(clientDTO.getTel());
