@@ -43,6 +43,7 @@ public class ClientRepository {
                             client.setName(rs.getString("name"));
                             client.setTel(rs.getString("tel"));
                             client.setCreatedAt(String.valueOf(rs.getTimestamp("createdAt")));
+                            client.setUpdatedAt(null);
                         }
                     }
                 } else {
@@ -108,16 +109,13 @@ public class ClientRepository {
         client.setName(rs.getString("name"));
         client.setTel(rs.getString("tel"));
         client.setCreatedAt(String.valueOf(rs.getTimestamp("createdAt")));
-        if (Objects.equals(String.valueOf(rs.getTimestamp("createdAt")), String.valueOf(rs.getTimestamp("updatedAt")))){
-            client.setUpdatedAt(null);
-        } else {
-            client.setUpdatedAt(String.valueOf(rs.getTimestamp("updatedAt")));
-        }
+        client.setUpdatedAt(String.valueOf(rs.getTimestamp("updatedAt")));
     }
 
     public Client update(int id, String name, String tel) {
         StringBuilder queryString = new StringBuilder("UPDATE clients SET ");
         List<Object> params = new ArrayList<>();
+
         if (name != null) {
             queryString.append("name = ?, ");
             params.add(name);
@@ -127,12 +125,14 @@ public class ClientRepository {
             params.add(tel);
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-        String updatedAt = LocalDateTime.now().format(formatter);
-        queryString.append("updatedAt = ?, ");
-        params.add(updatedAt);
+        if (params.size() > 0) {
+            queryString.setLength(queryString.length() - 2);
+        } else {
+            return null;
+        }
 
-        queryString.setLength(queryString.length() - 2);
+        queryString.append(", updatedat = current_timestamp");
+
         queryString.append(" WHERE id = ?");
         params.add(id);
 
@@ -151,6 +151,7 @@ public class ClientRepository {
         }
         return null;
     }
+
 
     public Boolean delete(int id) {
         try {
