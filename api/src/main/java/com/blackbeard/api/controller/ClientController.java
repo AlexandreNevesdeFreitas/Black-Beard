@@ -60,7 +60,7 @@ public class ClientController {
         }
     }
 
-    @PatchMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteClientById(@PathVariable int id) {
         Boolean updatedClient = clientRepository.delete(id);
 
