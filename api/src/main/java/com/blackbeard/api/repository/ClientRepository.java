@@ -51,7 +51,7 @@ public class ClientRepository {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Erro ao salvar cliente:", e);
+            logger.error("Erro ao salvar cliente:::::::::::::::::::::::::::::", e);
         }
         return client;
     }
@@ -71,7 +71,7 @@ public class ClientRepository {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Erro ao buscar clientes:", e);
+            logger.error("Erro ao buscar cliente:::::::::::::::::::::::::::::", e);
         }
         return clientList.toArray(new Client[0]);
     }
@@ -95,7 +95,7 @@ public class ClientRepository {
                     }
                 }
             } catch (SQLException e) {
-                logger.error("Erro ao buscar cliente:", e);
+                logger.error("Erro ao buscar cliente:::::::::::::::::::::::::::::", e);
             }
             return client;
         } catch (NumberFormatException e) {
@@ -113,27 +113,23 @@ public class ClientRepository {
     }
 
     public Client update(int id, String name, String tel) {
-        StringBuilder queryString = new StringBuilder("UPDATE clients SET ");
+        String queryString = "UPDATE clients SET ";
         List<Object> params = new ArrayList<>();
 
         if (name != null) {
-            queryString.append("name = ?, ");
+            queryString += "name = ?, ";
             params.add(name);
         }
         if (tel != null) {
-            queryString.append("tel = ?, ");
+            queryString += "tel = ?, ";
             params.add(tel);
         }
 
-        if (params.size() > 0) {
-            queryString.setLength(queryString.length() - 2);
-        } else {
+        if (params.isEmpty()) {
             return null;
         }
 
-        queryString.append(", updatedat = current_timestamp");
-
-        queryString.append(" WHERE id = ?");
+        queryString += "updatedAt = current_timestamp WHERE id = ?";
         params.add(id);
 
         try (Connection conn = dataSource.getConnection();

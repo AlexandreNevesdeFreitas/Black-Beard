@@ -2,8 +2,16 @@ package com.blackbeard.api.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 @Data
 public class ClientDTO {
+    @NotBlank(message = "O campo 'name' não pode estar em branco")
     private String name;
+
+    @NotBlank(message = "O campo 'tel' não pode estar em branco")
     private String tel;
+
+    // Getters e setters aqui
+
+    // Construtor vazio e outros métodos, se necessário
 }
