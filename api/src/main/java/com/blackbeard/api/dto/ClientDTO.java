@@ -11,7 +11,4 @@ public class ClientDTO {
     @NotBlank(message = "O campo 'tel' não pode estar em branco")
     private String tel;
 
-    // Getters e setters aqui
-
-    // Construtor vazio e outros métodos, se necessário
 }

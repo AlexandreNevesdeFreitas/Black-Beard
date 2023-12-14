@@ -2,7 +2,8 @@ package com.blackbeard.api.controller;
 
 import com.blackbeard.api.exception.ApiException;
 import org.springframework.http.HttpStatus;
-
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.blackbeard.api.dto.ClientDTO;
 import com.blackbeard.api.model.Client;
 import com.blackbeard.api.repository.ClientRepository;
@@ -23,7 +24,7 @@ public class ClientController {
     @PostMapping
     public ResponseEntity<Client> createClient(@Valid @RequestBody ClientDTO clientDTO) {
         if (clientDTO.getName() == null || clientDTO.getTel() == null) {
-            throw new ApiException("Requisição inválida: Nome e telefone são campos obrigatórios", HttpStatus.BAD_REQUEST);
+            throw new ApiException("Requisição inválida, campos name e tel são obrigatórios!", HttpStatus.BAD_REQUEST);
         }
         Client client = new Client();
         client.setName(clientDTO.getName());
@@ -39,14 +40,14 @@ public class ClientController {
         return ResponseEntity.ok(clients);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Client> findClientById(@PathVariable int id) {
+    @GetMapping("/find")
+    public ResponseEntity<Client> findClientById(@RequestParam int id) {
         Client client = clientRepository.findById(id);
         return ResponseEntity.ok(client);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Client> updateClientById(@Valid @PathVariable int id, @RequestBody ClientDTO clientDTO) {
+    @PatchMapping("/find")
+    public ResponseEntity<Client> updateClientById(@Valid @RequestParam int id, @RequestBody ClientDTO clientDTO) {
         if (clientDTO.getName() == null && clientDTO.getTel() == null) {
             throw new ApiException("Sem campos válidos para serem atualizados", HttpStatus.BAD_REQUEST);
         }
@@ -60,8 +61,8 @@ public class ClientController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteClientById(@PathVariable int id) {
+    @DeleteMapping("/find")
+    public ResponseEntity<String> deleteClientById(@RequestParam int id) {
         Boolean updatedClient = clientRepository.delete(id);
 
         if (!updatedClient) {

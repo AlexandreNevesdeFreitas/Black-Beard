@@ -71,36 +71,39 @@ public class ClientRepository {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Erro ao buscar cliente:::::::::::::::::::::::::::::", e);
+            logger.error("Erro ao buscar clientes:::::::::::::::::::::::::::::", e);
         }
         return clientList.toArray(new Client[0]);
     }
 
-    public Client findById(int id) {
+    public Client findById(int id) throws ApiException {
         try {
             String queryString = "SELECT * FROM clients WHERE id = ?";
             assert dataSource != null;
 
-            Client client = null;
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(queryString)) {
                 ps.setInt(1, id);
                 boolean hasResultSet = ps.execute();
-                if (hasResultSet) {
-                    try (ResultSet rs = ps.getResultSet()) {
-                        if (rs.next()) {
-                            client = new Client();
-                            setClient(client, rs);
-                        }
+                if (!hasResultSet) {
+                    throw new ApiException("Cliente não encontrado", HttpStatus.NOT_FOUND);
+                }
+                try (ResultSet rs = ps.getResultSet()) {
+                    if (rs.next()) {
+                        Client client = new Client();
+                        setClient(client, rs);
+                        return client;
+                    } else {
+                        throw new ApiException("Cliente não encontrado", HttpStatus.NOT_FOUND);
                     }
                 }
             } catch (SQLException e) {
-                logger.error("Erro ao buscar cliente:::::::::::::::::::::::::::::", e);
+                logger.error("Erro ao buscar cliente:", e);
+                throw new ApiException("Erro ao buscar cliente", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            return client;
         } catch (NumberFormatException e) {
             logger.error("ID fornecido não é um número inteiro válido", e);
-            return null;
+            throw new ApiException("ID inválido", HttpStatus.BAD_REQUEST);
         }
     }
 
