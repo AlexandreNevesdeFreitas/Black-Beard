@@ -42,8 +42,7 @@ public class ClientRepository {
                             client.setId(rs.getInt("id"));
                             client.setName(rs.getString("name"));
                             client.setTel(rs.getString("tel"));
-                            client.setCreatedAt(String.valueOf(rs.getTimestamp("createdAt")));
-                            client.setUpdatedAt(null);
+                            client.setCreatedAt(rs.getTimestamp("createdAt"));
                         }
                     }
                 } else {
@@ -111,8 +110,8 @@ public class ClientRepository {
         client.setId(rs.getInt("id"));
         client.setName(rs.getString("name"));
         client.setTel(rs.getString("tel"));
-        client.setCreatedAt(String.valueOf(rs.getTimestamp("createdAt")));
-        client.setUpdatedAt(String.valueOf(rs.getTimestamp("updatedAt")));
+        client.setCreatedAt(rs.getTimestamp("createdAt"));
+        client.setUpdatedAt(rs.getTimestamp("updatedAt"));
     }
 
     public Client update(int id, String name, String tel) {
