@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 @Repository
 public class ClientRepository {
     private final DataSource dataSource;
-    private static final Logger logger = LoggerFactory.getLogger(ClientRepository.class);
+    static final Logger logger = LoggerFactory.getLogger(ClientRepository.class);
 
     public ClientRepository(DataSource dataSource) {
         this.dataSource = dataSource;
