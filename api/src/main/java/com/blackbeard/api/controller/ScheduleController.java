@@ -64,6 +64,11 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    @GetMapping("/allschedules")
+    public ResponseEntity<List<Schedule>> getCurrentDayShedules(){
+        List<Schedule> todaySchedules = scheduleRepository.findTodaySchedules();
+        return ResponseEntity.ok(todaySchedules);
+    }
 
     @PatchMapping("/find")
     public ResponseEntity<Schedule> updateSchedule(@RequestParam int id, @Valid @RequestBody ScheduleDTO scheduleDTO) {
