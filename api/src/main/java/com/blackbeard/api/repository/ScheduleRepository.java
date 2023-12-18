@@ -114,8 +114,24 @@ public class ScheduleRepository {
         schedule.setClientId(rs.getInt("client_id"));
         schedule.setService(rs.getString("service"));
         schedule.setNote(rs.getString("note"));
-        schedule.setCreatedAt(rs.getTimestamp("createdat"));
-        schedule.setUpdatedAt(rs.getTimestamp("updatedat"));
+        schedule.setCreatedAt(rs.getTimestamp("created_at"));
+        schedule.setUpdatedAt(rs.getTimestamp("updated_at"));
         return schedule;
+    }
+
+    public List<Schedule> findTodaySchedules(){
+        List<Schedule> todaySchedules = new ArrayList<>();
+        String sql = "SELECT * FROM schedules WHERE DATE(appointment) = CURRENT_DATE;";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                todaySchedules.add(extractScheduleFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            // Log e tratamento de exceção
+        }
+        return todaySchedules;
     }
 }
