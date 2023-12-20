@@ -20,20 +20,23 @@ import org.slf4j.LoggerFactory;
 @Repository
 public class ClientRepository {
     private final DataSource dataSource;
-    static final Logger logger = LoggerFactory.getLogger(ClientRepository.class);
+    public static final Logger logger = LoggerFactory.getLogger(ClientRepository.class);
 
     public ClientRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     public Client save(Client client) {
-        String queryString = "INSERT INTO clients (name, tel) VALUES (?, ?) RETURNING *";
+        String queryString = "INSERT INTO client (name, tel, barberId) VALUES (?, ?, ?) RETURNING *";
+        logger.error("=====================================================================================================================================================================================================================");
+        logger.error(String.valueOf(client.getBarberId()));
         try {
             assert dataSource != null;
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(queryString)) {
                 ps.setString(1, client.getName());
                 ps.setString(2, client.getTel());
+                ps.setInt(3, client.getBarberId());
 
                 boolean hasResultSet = ps.execute();
                 if (hasResultSet) {
@@ -42,6 +45,7 @@ public class ClientRepository {
                             client.setId(rs.getInt("id"));
                             client.setName(rs.getString("name"));
                             client.setTel(rs.getString("tel"));
+                            client.setBarberId(rs.getInt("barberId"));
                             client.setCreatedAt(rs.getTimestamp("createdAt"));
                         }
                     }
@@ -56,7 +60,7 @@ public class ClientRepository {
     }
 
     public Client[] findAll() {
-        String queryString = "SELECT * FROM clients";
+        String queryString = "SELECT * FROM client";
         List<Client> clientList = new ArrayList<>();
         try {
             assert dataSource != null;
@@ -77,7 +81,7 @@ public class ClientRepository {
 
     public Client findById(int id) throws ApiException {
         try {
-            String queryString = "SELECT * FROM clients WHERE id = ?";
+            String queryString = "SELECT * FROM client WHERE id = ?";
             assert dataSource != null;
 
             try (Connection conn = dataSource.getConnection();
@@ -110,12 +114,13 @@ public class ClientRepository {
         client.setId(rs.getInt("id"));
         client.setName(rs.getString("name"));
         client.setTel(rs.getString("tel"));
+        client.setBarberId(rs.getInt("barberId"));
         client.setCreatedAt(rs.getTimestamp("createdAt"));
         client.setUpdatedAt(rs.getTimestamp("updatedAt"));
     }
 
     public Client update(int id, String name, String tel) {
-        String queryString = "UPDATE clients SET ";
+        String queryString = "UPDATE client SET ";
         List<Object> params = new ArrayList<>();
 
         if (name != null) {
@@ -153,7 +158,7 @@ public class ClientRepository {
 
     public Boolean delete(int id) {
         try {
-            String queryString = "DELETE FROM clients WHERE id = ?";
+            String queryString = "DELETE FROM client WHERE id = ?";
             assert dataSource != null;
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement ps = conn.prepareStatement(queryString)) {

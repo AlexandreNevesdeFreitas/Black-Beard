@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.logging.Logger;
+
+import static com.blackbeard.api.repository.ClientRepository.logger;
 
 @RestController
 @RequestMapping("/clients")
@@ -29,7 +32,9 @@ public class ClientController {
         Client client = new Client();
         client.setName(clientDTO.getName());
         client.setTel(clientDTO.getTel());
-
+        client.setBarberId(clientDTO.getBarberId());
+        logger.error("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+        logger.error(String.valueOf(clientDTO.getBarberId()));
         Client savedClient = clientRepository.save(client);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedClient);
     }

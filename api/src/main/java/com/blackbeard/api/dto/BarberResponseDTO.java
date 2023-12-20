@@ -1,15 +1,13 @@
-package com.blackbeard.api.model;
+package com.blackbeard.api.dto;
+
 
 import lombok.Data;
-
 import java.sql.Timestamp;
 
 @Data
-public class Client {
+public class BarberResponseDTO {
     private int id;
     private String name;
-    private String tel;
-    private int barberId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }

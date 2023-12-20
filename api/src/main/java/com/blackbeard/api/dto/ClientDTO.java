@@ -11,4 +11,7 @@ public class ClientDTO {
     @NotBlank(message = "O campo 'tel' não pode estar em branco")
     private String tel;
 
+    @NotBlank(message = "O campo 'tel' não pode estar em branco")
+    private int barberId;
+
 }
